@@ -22,9 +22,12 @@ def get_data():
 
 def student_match(student_id: str) -> List:
     students = get_data()
+    found_students = []
     for student in students:
         if student_id in student['id']:
-            return student
+            found_students.append(student)
+    if len(found_students) > 0:
+        return found_students
     else:
         return 'Not Found'
 
@@ -35,6 +38,7 @@ def main():
     print(s)
 
 if __name__ == "__main__":
+    main()
     student_id = input("Enter student id to search for: ")
     found = student_match(student_id)
     print(found)
