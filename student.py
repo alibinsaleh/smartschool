@@ -21,7 +21,7 @@ class Student(BaseModel):
     classroom: str
     address: Optional[str]
     mobile: Optional[str]
-    date_created: date
+    created_at: date
 
     @model_validator(mode='before')
     @classmethod

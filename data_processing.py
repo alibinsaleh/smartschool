@@ -23,7 +23,7 @@ class RecordBook:
     id: str
     assessment: str
     mark: float
-    date_created:  datetime
+    created_at:  datetime
     note: str
 
 #@dataclass
@@ -47,6 +47,7 @@ class DataProcessing:
         try:
             with open('students_data.csv', 'r') as csvfile:
                 reader = csv.reader(csvfile)
+                next(reader)  # Discard the first row
                 for row in reader:
                     #print(row[0])
                     student = Student(id=row[0], 
@@ -54,7 +55,7 @@ class DataProcessing:
                             classroom=row[2],
                             address=row[3],
                             mobile=row[4],
-                            date_created=datetime.datetime.strptime(row[5], "%Y-%m-%d"))
+                            created_at=datetime.datetime.strptime(row[5], "%Y-%m-%d"))
                     self.students.append(student)
         except FileNotFoundError:
             print("File (students_data.csv) not found !")
@@ -72,7 +73,7 @@ class DataProcessing:
                     record_row = RecordBook(id=row[0],
                                             assessment=row[1],
                                             mark=float(row[2]),
-                                            date_created=row[3],
+                                            created_at=row[3],
                                             note=row[4])
                     self.record_book.append(record_row)
         except FileNotFoundError:
@@ -107,7 +108,7 @@ class DataProcessing:
                             student.classroom,
                             student.address,
                             student.mobile,
-                            student.date_created])
+                            student.created_at])
 
     def add_student(self, student: Student) -> None:
         if student:
@@ -128,7 +129,7 @@ class DataProcessing:
             writer.writerow([record.id,
                             record.assessment,
                             record.mark,
-                            record.date_created,
+                            record.created_at,
                             record.note])
 
     def add_mark_to_student(self, student_id: str, record: RecordBook) -> None:

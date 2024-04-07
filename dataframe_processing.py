@@ -10,7 +10,6 @@ from rich import print
 class DF:
     """ Data Frame to handle student and mark classes as data frames"""
     def __init__(self, csvfile):
-        # self.students_df = pd.DataFrame(columns=['student_id', 'name', 'dob', 'address', 'mobile', 'classroom'])
         self.df = pd.read_csv(csvfile)
 
     def get_dataframe(self):

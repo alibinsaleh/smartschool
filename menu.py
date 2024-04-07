@@ -163,7 +163,7 @@ Name: {student.name}
 Classroom: {student.classroom}
 Address: {student.address}
 Mobile: {student.mobile}
-Date Created: {student.date_created}
+Created At: {student.created_at}
 	    """)
 	
 
@@ -173,12 +173,12 @@ Date Created: {student.date_created}
         print("======================= REPORT DETAILS ====================")
         print()
 
-        print(f"{'Assessment':<25} {'Mark':>5} {'Date Created':>20} {'Note'}")
+        print(f"{'Assessment':<25} {'Mark':>5} {'Created At':>20} {'Note'}")
         print("-" * (25 + 5 + 20 + len("Note") + 6))  # Calculate total separator length
 
         for record in self.data_processing.record_book:
             if record.id == student_id:
-                print(f"{record.assessment:<25} {record.mark:>5} {record.date_created:>20} {record.note}")
+                print(f"{record.assessment:<25} {record.mark:>5} {record.created_at:>20} {record.note}")
 
         print()
         print("======================= END OF REPORT ====================")
