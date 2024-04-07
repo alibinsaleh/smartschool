@@ -9,6 +9,7 @@ from rich.table import Table
 from rich import print
 from student import Student
 from data_processing import DataProcessing, Assessment, RecordBook
+from dataframe_processing import StudentDF
 
 sounds_path = './sounds/'
 
@@ -23,6 +24,7 @@ class Menu:
 		"3": self.display_all_students,
                 "4": self.display_classroom_students,
                 "5": self.display_student_report,
+                "6": self.draw_students_totals_pie_chart,
                 "7": self.serialize_students,
 		"8": self.quit
 	}
@@ -39,6 +41,7 @@ class Menu:
 3. Display all students
 4. Display a classroom students
 5. Display a student report
+6. Draw Students's totals pie chart
 7. Serialize Students Data
 8. Quit
 	""")
@@ -223,6 +226,12 @@ Date Created: {student.date_created}
             print("No ID was provided.")
         return ''
     
+    def draw_students_totals_pie_chart(self):
+        students = StudentDF('students_data.csv')
+        classroom = input("Enter classroom or <ENTER> to terminate: ")
+        if classroom != '':
+            students.draw_students_totals_pie_chart(int(classroom))
+
 
     def serialize_students(self):
         """Serialize students personal data into JSON format"""

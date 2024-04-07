@@ -100,4 +100,4 @@ def main():
     #print(marks.get_dataframe())
     #marks.draw_pie_chart(marks_category_count)
 
-main()
+#main()
