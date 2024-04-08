@@ -44,7 +44,7 @@ class MarkDF(DF):
 class StudentDF(DF):
     def __init__(self, studentsFile):
         super().__init__(studentsFile)
-        self.marks_df = MarkDF('record_book.csv').get_dataframe()
+        self.marks_df = MarkDF('marks_book.csv').get_dataframe()
         self.students_totals_df = self.get_students_totals_df()
     
     def get_students_totals_df(self):

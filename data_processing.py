@@ -19,7 +19,7 @@ class Assessment(Enum):
 
 
 @dataclass
-class RecordBook:
+class MarkBook:
     id: str
     assessment: str
     mark: float
@@ -40,8 +40,8 @@ class DataProcessing:
     def __init__(self):
         """Initialize class attributes."""
         self.students = []
-        self.record_book = []
-        #self.record_book = pd.DataFrame(columns=['id', 'name', 'assessment', 'mark', 'date_created', 'note'])
+        self.marks_book = []
+        #self.marks_book = pd.DataFrame(columns=['id', 'name', 'assessment', 'mark', 'date_created', 'note'])
 
     def load_students_from_file(self) -> None:
         try:
@@ -59,25 +59,37 @@ class DataProcessing:
                     self.students.append(student)
         except FileNotFoundError:
             print("File (students_data.csv) not found !")
+            choice = input("Do you want me to create it for you? (Y/N): ")
+            if choice.upper() == "Y":
+                with open("students_data.csv", "w") as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(['id', 'name', 'classroom', 'address', 'mobile', 'created_at'])
+                    print("File <students_data.csv> created successfully!")
         except Exception as e:  # Catch other potential exceptions
             print(f"An error occurred: {e}")
     
-    def load_record_book(self) -> None:
+    def load_marks_book(self) -> None:
         try:
-            with open('record_book.csv', 'r') as csvfile:
+            with open('marks_book.csv', 'r') as csvfile:
                 reader = csv.reader(csvfile)
                 # Read and discard the first row (header)
                 next(reader)  # Discard the first row
                 for row in reader:
                     #print(row[0])
-                    record_row = RecordBook(id=row[0],
+                    mark_row = MarkBook(id=row[0],
                                             assessment=row[1],
                                             mark=float(row[2]),
                                             created_at=row[3],
                                             note=row[4])
-                    self.record_book.append(record_row)
+                    self.marks_book.append(mark_row)
         except FileNotFoundError:
-            print("File (record_book.csv) not found !")
+            print("File (marks_book.csv) not found !")
+            choice = input("Do you want me to create it for you? (Y/N): ")
+            if choice.upper() == "Y":
+                with open("marks_book.csv", "w") as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(['id', 'assessment', 'mark', 'created_at', 'note'])
+                    print("File <marks_book.csv> created successfully!")
         except Exception as e: #Catch other potential exceptions
             print(f"An error occured: {e}")
 
@@ -92,13 +104,13 @@ class DataProcessing:
         return temp_students
 
     
-    def get_student_records(self, student_id: str) -> List:
-        """Retrieve all student's marks from the record_book list"""
-        student_records = []
-        for record in self.record_book:
-            if record.id == student_id:
-                student_records.append(record)
-        return student_records
+    def get_student_marks(self, student_id: str) -> List:
+        """Retrieve all student's marks from the marks_book list"""
+        student_marks = []
+        for mark in self.marks_book:
+            if mark.id == student_id:
+                student_marks.append(mark)
+        return student_marks
 
     def save_student_to_file(self, student: Student) -> None:
         with open('students_data.csv', 'a') as csvfile:
@@ -122,21 +134,21 @@ class DataProcessing:
         return False
 
 
-    def save_mark_to_file(self, student_id, record: RecordBook) -> None:
-        """Save mark of a student to the record book file."""
-        with open('record_book.csv', 'a') as csvfile:
+    def save_mark_to_file(self, student_id, mark: MarkBook) -> None:
+        """Save mark of a student to the mark book file."""
+        with open('marks_book.csv', 'a') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow([record.id,
-                            record.assessment,
-                            record.mark,
-                            record.created_at,
-                            record.note])
+            writer.writerow([mark.id,
+                            mark.assessment,
+                            mark.mark,
+                            mark.created_at,
+                            mark.note])
 
-    def add_mark_to_student(self, student_id: str, record: RecordBook) -> None:
-        """Add a mark to a student in the record book"""
+    def add_mark_to_student(self, student_id: str, mark: MarkBook) -> None:
+        """Add a mark to a student in the mark book"""
         if self.student_match(student_id):
-            self.record_book.append(record)
-            self.save_mark_to_file(student_id, record)
+            self.marks_book.append(mark)
+            self.save_mark_to_file(student_id, mark)
         else:
             print("Sorry, student with this ID ({student_id}) is not found !")
 
@@ -175,7 +187,7 @@ if __name__ == '__main__':
     #else:
     #    print(f"Sorry, classroom ({classroom}) is not in our classrooms.")
 
-    test.load_record_book()
+    test.load_marks_book()
 
     ask = input('Do you want to add a student (Y/N)? ')
     if ask.upper() == 'Y':
@@ -184,9 +196,9 @@ if __name__ == '__main__':
         classroom = input('Enter classroom: ')
         address = 'Hofuf'
         mobile = '0549282891'
-        date_created = datetime.date.today()
+        created_at = datetime.date.today()
         print(date_created)
-        test.add_student(Student(id=id, name=name, classroom=classroom, address=address, mobile=mobile, date_created=date_created))
+        test.add_student(Student(id=id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at))
     
     ask = input("Want to add an assessment to a student (Y/N)? ")
     if ask.upper() == 'Y':
@@ -196,11 +208,6 @@ if __name__ == '__main__':
             mark = float(input("Enter Mark: "))
             date_created = datetime.datetime.today().date()
             note = 'N/A'
-            record = RecordBook(id, assessment.name, mark, date_created, note)
-            test.add_mark_to_student(id, record)
+            mark = MarkBook(id, assessment.name, mark, created_at, note)
+            test.add_mark_to_student(id, mark)
             
-    #if test.get_student_records('87728') != []:
-    #    print('There are some records for this student')
-    #    print(test.get_student_records('87728'))
-    #else:
-    #    print('This student has no records yet.')

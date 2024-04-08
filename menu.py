@@ -8,7 +8,7 @@ import json
 from rich.table import Table
 from rich import print
 from student import Student
-from data_processing import DataProcessing, Assessment, RecordBook
+from data_processing import DataProcessing, Assessment, MarkBook
 from dataframe_processing import StudentDF
 
 sounds_path = './sounds/'
@@ -17,7 +17,7 @@ class Menu:
     def __init__(self):
         self.data_processing = DataProcessing()
         self.data_processing.load_students_from_file()
-        self.data_processing.load_record_book()
+        self.data_processing.load_marks_book()
         self.choices = {
 		"1": self.new_student,
 		"2": self.new_mark,
@@ -93,8 +93,8 @@ class Menu:
                 note = input("Enter any note or <ENTER> for nothing: ")
                 if not note:
                     note = 'n/a'
-                record = RecordBook(student_id, assessment.name, mark, date_created, note)
-                self.data_processing.add_mark_to_student(student_id, record)
+                mark = MarkBook(student_id, assessment.name, mark, date_created, note)
+                self.data_processing.add_mark_to_student(student_id, mark)
             else:
                 os.system(f"afplay {sounds_path}beep-10.wav")
                 print(f"Sorry, a student with ({student_id}) is not registered.")
@@ -108,11 +108,11 @@ class Menu:
         """Prints all students in a formatted table."""
         os.system(f"afplay {sounds_path}button-15.wav")
         students = self.data_processing.get_students()
-
-        # Find maximum lengths for each column
-        id_length = max(len(str(student.id)) for student in students) + 1
-        name_length = max(len(student.name) for student in students) + 1
-        classroom_length = max(len(student.classroom) for student in students) + 1
+        if len(students) > 0:
+            # Find maximum lengths for each column
+            id_length = max(len(str(student.id)) for student in students) + 1
+            name_length = max(len(student.name) for student in students) + 1
+            classroom_length = max(len(student.classroom) for student in students) + 1
         # --------------------  Printing report without using rich module's print --------------
         # Print table header
         
@@ -176,9 +176,9 @@ Created At: {student.created_at}
         print(f"{'Assessment':<25} {'Mark':>5} {'Created At':>20} {'Note'}")
         print("-" * (25 + 5 + 20 + len("Note") + 6))  # Calculate total separator length
 
-        for record in self.data_processing.record_book:
-            if record.id == student_id:
-                print(f"{record.assessment:<25} {record.mark:>5} {record.created_at:>20} {record.note}")
+        for mark in self.data_processing.marks_book:
+            if mark.id == student_id:
+                print(f"{mark.assessment:<25} {mark.mark:>5} {mark.created_at:>20} {mark.note}")
 
         print()
         print("======================= END OF REPORT ====================")
