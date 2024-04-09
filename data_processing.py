@@ -121,6 +121,18 @@ class DataProcessing:
                             student.address,
                             student.mobile,
                             student.created_at])
+    
+    def save_all_students_to_file(self, students: List) -> None:
+        with open('students_data.csv', 'w') as csvfile:
+            writer = csv.writer(csvfile)
+            for student in students:
+                writer.writerow([student.id, 
+                                student.name, 
+                                student.classroom,
+                                student.address,
+                                student.mobile,
+                                student.created_at])
+            
 
     def add_student(self, student: Student) -> None:
         if student:
@@ -132,6 +144,11 @@ class DataProcessing:
             if student.id == student_id:
                 return True
         return False
+    
+    def get_student(self, student_id: str) -> int:
+        for student in self.students:
+            if student.id == student_id:
+                return self.students.index(student)
 
 
     def save_mark_to_file(self, student_id, mark: MarkBook) -> None:
