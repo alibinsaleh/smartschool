@@ -51,14 +51,14 @@ class StudentDF(DF):
         totals_df = pd.DataFrame(columns=['id', 'name', 'classroom', 'total'])
         for index, row in self.df.iterrows():
             # find student in the marks data frame
-            student_id_in_marks = self.marks_df[self.marks_df['id'] == row['id']]
+            student_id_in_marks = self.marks_df[self.marks_df['id'] == row[0]]
             if (not student_id_in_marks.empty):
                 total = self.marks_df.groupby('id')['mark'].sum()
                 totals_dict = {
-                        'id': row['id'], 
-                        'name': row['name'], 
-                        'classroom': row['classroom'],
-                        'total': total[row['id']]
+                        'id': row[0], 
+                        'name': row[1], 
+                        'classroom': row[2],
+                        'total': total[row[0]]
                 }
                 temp_df = pd.DataFrame(totals_dict, index=[0])
                 totals_df  = pd.concat([totals_df, temp_df], ignore_index=True)

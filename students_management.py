@@ -28,6 +28,7 @@ class StudentsManagement:
             "6": self.display_student_report,
             "7": self.draw_students_totals_pie_chart,
             "8": self.serialize_students,
+            "9": self.back
 	}
 
     def display_menu(self):
@@ -50,13 +51,14 @@ class StudentsManagement:
 
     def run(self):
         """Display students management menu and respond to choices."""
-        while True:
+        loop = True
+        while loop:
             #os.system('clear')
             self.display_menu()
             choice = input("Enter an option: ")
             action = self.choices.get(choice)
             if action:
-                action()
+                loop = action()
             else:
                 print("{0} is not a valid choice".format(choice))
                 break
@@ -75,12 +77,14 @@ class StudentsManagement:
                 print(e)
         else:
             print(f"Sorry, this ID <{id}> is already taken.")
+        return True
 
     def edit_student(self):
         student_id = input("Enter student ID: ")
         # check if an id was provided
         if student_id:
             found = False
+            changed = False
             for student in self.data_processing.students:
                 if student.id == student_id:
                     found = True
@@ -89,34 +93,43 @@ class StudentsManagement:
                     new_name = input('Enter new student name or < ENTER > to keep it: ')
                     if new_name:
                         name = new_name
+                        changed = True
                     else:
                         name = student.name
                     print(f"Current Classroom: {student.classroom}")
                     new_classroom = input('Enter new classroom or < ENTER > to keep it: ')
                     if new_classroom:
                         classroom = new_classroom
+                        changed = True
                     else:
                         classroom = student.classroom
                     address = 'Hofuf'
                     mobile = '0549282891'
                     created_at = datetime.date.today()
-                    try:
-                        self.data_processing.students[idx] = Student(id=student_id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at)
-                        self.data_processing.save_all_students_to_file(self.data_processing.students)
-                        print(f"Student with this ID < {student_id} > is successfully updated.")
-                        break
-                    except ValueError as e:
-                        print(e)
+                    if changed:
+                        try:
+                            self.data_processing.students[idx] = Student(id=student_id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at)
+                            self.data_processing.save_all_students_to_file(self.data_processing.students)
+                            print(f"Student with this ID < {student_id} > is successfully updated.")
+                            break
+                        except ValueError as e:
+                            print(e)
+                    else:
+                        print(f"Sorry, no changes on student's data.")
             if not found:
                 print(f"Sorry, student with this ID < {student_id} > is not found!")
         else:
             print("Sorry, no student ID is provided!")
         
         input("Press < ENTER > to continue ...")
-    
+        return True
 
     def delete_student(self):
         pass
+        return True
+    
+    
+    
 
     def display_all_students(self):
         """Prints all students in a formatted table."""
@@ -152,6 +165,7 @@ class StudentsManagement:
         # Optional: Prompt to continue (if needed)
         input("Press <ENTER> to continue...")
 
+        return True
     
     def display_classroom_students(self):
         os.system(f"afplay {sounds_path}button-15.wav")
@@ -167,6 +181,7 @@ class StudentsManagement:
         print(table)
         # Optional: Prompt to continue (if needed)
         input("Press <ENTER> to continue...")
+        return True
 
     def print_report_header(self, student):
         print(f"""
@@ -210,12 +225,14 @@ Created At: {student.created_at}
         else:
             print(f"Sorry, student with this id ({student_id}) is not found.")
         input("Press <ENTER> to continue...")
+        return True
 
     def draw_students_totals_pie_chart(self):
         students = StudentDF('students_data.csv')
         classroom = input("Enter classroom or <ENTER> to terminate: ")
         if classroom != '':
             students.draw_students_totals_pie_chart(int(classroom))
+        return True
 
     def serialize_students(self):
         """Serialize students personal data into JSON format"""
@@ -241,7 +258,7 @@ Created At: {student.created_at}
         # Or, print the JSON string to the console
         print(json.dumps(data, indent=4))
         input("Press <ENTER> to continue ...")
+        return True
     
-    def quit(self):
-        #os.system(f"afplay {sounds_path}button-1.wav")
-        pass
+    def back(self):
+        return False

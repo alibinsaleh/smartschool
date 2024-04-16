@@ -11,6 +11,7 @@ from student import Student
 from data_processing import DataProcessing, Assessment, MarkBook
 from dataframe_processing import StudentDF
 from students_management import StudentsManagement
+from maintenance import Maintenance
 
 sounds_path = './sounds/'
 
@@ -22,6 +23,7 @@ class Menu:
         self.choices = {
             "1": self.students_management,
             "2": self.new_mark,
+            "3": self.maintenance,
             "8": self.quit
 	    }
 
@@ -34,13 +36,14 @@ class Menu:
 
 1. Students Management Menu
 2. New Mark
+3. Maintenance
 8. Quit
 	""")
 
     def run(self):
         """Display menu and respond to choices."""
         while True:
-            #os.system('clear')
+            os.system('clear')
             self.display_menu()
             choice = input("Enter an option: ")
             action = self.choices.get(choice)
@@ -111,7 +114,10 @@ class Menu:
             print("No ID was provided.")
         return ''
     
-    
+    def maintenance(self):
+        """Back up and restore data from files."""
+        Maintenance().run()
+
     def quit(self):
         os.system(f"afplay {sounds_path}button-1.wav")
         print("Thank you for using the FOLLOW-UP APPLICATION.")
