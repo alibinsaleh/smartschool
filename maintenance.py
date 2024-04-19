@@ -125,8 +125,33 @@ class Maintenance:
         input("Press < ENTER > to continue ...")
         return True
 
+    def restore(self, destination_file, last_backup_number):
+        """General file restoration function"""
+        if destination_file == 'students_data.csv':
+            source_file = backups_path + "students_backups/students_data_" + str(last_backup_number) + ".csv"
+        elif destination_file == 'marks_book.csv':
+            source_file = backups_path + "marks_backups/marks_book_" + str(last_backup_number) + ".csv"
+
+        try:
+            shutil.copyfile(source_file, destination_file)
+            print(f"File copied successfully from {source_file} to {destination_file}")
+        except IOError as e:
+            print(f"Error copying file: {e}")
+
+
+
     def restore_all_data(self):
-        print("RESTORE ALL DATA FROM FILES")
+        """Restore all data to main program folder"""
+        # Get the last backup number 
+        last_backup_number = self.get_last_backup_number()
+        # Before proceeding to make the restoration, we need to make a cautionary data backup before proceeding to restore any data.
+        # Make backups
+        self.backup_all_data()
+        # Now let the restoration process begins, WOW!!!
+        # Restore 'students_data_{last_backup_number}.csv' to 'students_data.csv'
+        self.restore('students_data.csv', last_backup_number)
+        # Restore 'marks_data_{last_backup_number}.csv' to 'marks_data.csv'
+        self.restore('marks_book.csv', last_backup_number)
         input("Press < ENTER > to continue ...")
         return True
     
