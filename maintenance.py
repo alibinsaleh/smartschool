@@ -110,9 +110,9 @@ class Maintenance:
 
         try:
             shutil.copyfile(source_file, destination_file)
-            print(f"File copied successfully from {source_file} to {destination_file}")
+            print(f"File {source_file} backed up successfull.")
         except IOError as e:
-            print(f"Error copying file: {e}")
+            print(f"Error backing up file: {e}")
 
     def backup_all_data(self):
         # Create next_backup_number to be current_backup_number + 1
@@ -122,7 +122,7 @@ class Maintenance:
         # Copy 'marks_data.csv' to '/backups/marks_backups/marks_data_' + next_backup_number' + '.csv'
         self.backup('marks_book.csv', next_backup_number)
         self.update_backup_number(next_backup_number)
-        input("Press < ENTER > to continue ...")
+        #input("Press < ENTER > to continue ...")
         return True
 
     def restore(self, destination_file, last_backup_number):
@@ -134,9 +134,9 @@ class Maintenance:
 
         try:
             shutil.copyfile(source_file, destination_file)
-            print(f"File copied successfully from {source_file} to {destination_file}")
+            print(f"File {destination_file} restored successfully.")
         except IOError as e:
-            print(f"Error copying file: {e}")
+            print(f"Error restoring file: {e}")
 
 
 
@@ -152,7 +152,7 @@ class Maintenance:
         self.restore('students_data.csv', last_backup_number)
         # Restore 'marks_data_{last_backup_number}.csv' to 'marks_data.csv'
         self.restore('marks_book.csv', last_backup_number)
-        input("Press < ENTER > to continue ...")
+        #input("Press < ENTER > to continue ...")
         return True
     
     def reset_students_data(self):
