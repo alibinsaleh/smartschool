@@ -1,27 +1,27 @@
 """
 Author: Ali A. Almohammed Saleh
-Program: students_management.py
-Purpose: Display a menu related to students, like adding, editing, deleting, etc.
+Program: marks_management.py
+Purpose: Display a menu related to marks, like adding, editing, deleting, etc.
 """
 import datetime
 import os
 import json
 from rich.table import Table
 from rich import print
-from student import Student
+from mark import Mark
 from data_processing import DataProcessing
-from dataframe_processing import StudentDF
+from data_processing import DataProcessing, Assessment, MarkBook
 
 sounds_path = './sounds/'
 
-class StudentsManagement:
+class MarksManagement:
     def __init__(self, processingModule):
         self.data_processing = processingModule
         #self.data_processing = DataProcessing()
         self.data_processing.load_students_from_file()
         self.data_processing.load_marks_book()
         self.choices = {
-            "1": self.add_student,
+            "1": self.new_mark,
             "2": self.edit_student,
             "3": self.delete_student,
             "4": self.display_all_students,
@@ -35,11 +35,11 @@ class StudentsManagement:
     def display_menu(self):
         os.system(f"afplay {sounds_path}beep.wav")
         print("""
-++++++++++++++++++++++++++++++
-+  STUDENTS MANAGEMENT MENU  +
-++++++++++++++++++++++++++++++
+(==========================)
+|  MARKSS MANAGEMENT MENU  |
+(==========================)
 
-1. Add Student
+1. Insert New Mark
 2. Edit Student
 3. Delete Student
 4. Display all students
@@ -63,22 +63,63 @@ class StudentsManagement:
             else:
                 print("{0} is not a valid choice".format(choice))
                 break
-
-    def add_student(self):
-        id = input('Enter student ID: ')
-        if not self.data_processing.student_match(id):
-            name = input('Enter student name: ')
-            classroom = input('Enter classroom: ')
-            address = 'Hofuf'
-            mobile = '0549282891'
-            created_at = datetime.date.today()
-            try:
-                self.data_processing.add_student(Student(id=id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at))
-            except ValueError as e:
-                print(e)
+    
+    def get_assessment_choice(self) -> str:
+        assess_list = [Assessment.THEORITICAL_PARTICIPATION,
+            Assessment.PRACTICAL_PARTICIPATION,
+            Assessment.THEORITICAL_QUIZ,
+            Assessment.PRACTICAL_QUIZ, 
+            Assessment.PROJECTS,
+            Assessment.VIOLATION]
+        print("""Select an assessment category:
+        1- THEORITICAL PARTICIPATION
+        2- PRACTICAL PARTICIPATION
+        3- THEORITICAL QUIZ
+        4- PRACTICAL QUIZ
+        5- PROJECTS
+        6- VIOLATION """)
+        choice = input(":")
+        # check if a correct choice was provided.
+        if choice:
+            # convert choice to int
+            choice = int(choice)
+            if choice > 0 and choice < 7:
+                return assess_list[choice-1]
         else:
-            print(f"Sorry, this ID <{id}> is already taken.")
-        return True
+            os.system(f"afplay {sounds_path}button-14.wav")
+            print("No ID was provided.")
+        return ''
+    
+    def new_mark(self):
+        """Insert a mark for a student"""
+        os.system(f"afplay {sounds_path}button-15.wav")
+        print("***************************")
+        print("*   Add Mark To Student   *")
+        print("***************************")
+        print()
+        student_id = input("Enter student ID: ")
+        # check if an id was provided
+        if student_id:
+            if self.data_processing.student_match(student_id):
+                assessment = self.get_assessment_choice()
+                mark = float(input("Enter Mark: "))
+                created_at = datetime.datetime.today().date()
+                note = input("Enter any note or <ENTER> for nothing: ")
+                if not note:
+                    note = 'n/a'
+                mark = MarkBook(student_id, assessment.name, mark, created_at, note)
+                self.data_processing.add_mark_to_student(student_id, mark)
+            else:
+                os.system(f"afplay {sounds_path}beep-10.wav")
+                print(f"Sorry, a student with ({student_id}) is not registered.")
+    
+        else:
+            os.system(f"afplay {sounds_path}button-14.wav")
+            print("No ID was provided.")
+        input("Press <ENTER> to continue ...")
+
+    
+
 
     def edit_student(self):
         student_id = input("Enter student ID: ")
