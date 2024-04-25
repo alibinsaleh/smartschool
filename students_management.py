@@ -110,13 +110,14 @@ class StudentsManagement:
                     if changed:
                         try:
                             self.data_processing.students[idx] = Student(id=student_id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at)
-                            self.data_processing.save_all_students_to_file(self.data_processing.students)
+                            self.data_processing.save_all_students_to_file('students_data.csv', self.data_processing.students)
                             print(f"Student with this ID < {student_id} > is successfully updated.")
                             break
                         except ValueError as e:
                             print(e)
                     else:
                         print(f"Sorry, no changes on student's data.")
+                        break
             if not found:
                 print(f"Sorry, student with this ID < {student_id} > is not found!")
         else:
@@ -126,7 +127,31 @@ class StudentsManagement:
         return True
 
     def delete_student(self):
-        pass
+        """Deletes student from students list and from file on disk."""
+        # Get student's id
+        student_id = input("Enter student ID: ")
+        # check if an id was provided
+        if student_id:
+            student_found = self.data_processing.student_match(student_id)
+            # Check the availability of student in the list first.
+            idx = self.data_processing.get_student(student_id)
+            if student_found:
+                # Check if this student has marks.
+                print(f"Current Name: {self.data_processing.students[idx].name}")
+                marks_found = self.data_processing.mark_match(student_id)
+                if marks_found:
+                    print(f"Yaaah, {self.data_processing.students[idx].name} has marks!")
+        input("Press < ENTER > to continue ...")
+        # Ask for confirmmation.
+        # If CONFIRMMED:
+        #   If student exists in list:
+        #       Add this student data to deleted_students.csv file.
+        #   If student has marks:
+        #       Add all his marks to deleted_marks.csv file.
+        #   Delete student from students list and from students_data.csv
+        #   Delete student's marks from list and from marks_record.csv
+        #   Display a deletion success message.
+        # Ask to continue ...
         return True
     
     

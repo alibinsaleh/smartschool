@@ -9,7 +9,7 @@ from rich.table import Table
 from rich import print
 from student import Student
 from mark import Mark
-from data_processing import DataProcessing, Assessment, MarkBook
+from data_processing import DataProcessing, Assessment
 from dataframe_processing import StudentDF
 from marks_management import MarksManagement
 from students_management import StudentsManagement

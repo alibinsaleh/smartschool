@@ -10,7 +10,7 @@ from rich.table import Table
 from rich import print
 from mark import Mark
 from data_processing import DataProcessing
-from data_processing import DataProcessing, Assessment, MarkBook
+from data_processing import DataProcessing, Assessment
 
 sounds_path = './sounds/'
 

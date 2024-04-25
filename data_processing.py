@@ -5,6 +5,7 @@ from typing import List
 from dataclasses import dataclass
 from enum import Enum, auto
 from student import Student
+from mark import Mark
 import datetime
 import csv
 
@@ -18,13 +19,13 @@ class Assessment(Enum):
     VIOLATION = auto()
 
 
-@dataclass
-class MarkBook:
-    id: str
-    assessment: str
-    mark: float
-    created_at:  datetime
-    note: str
+#@dataclass
+#class MarkBook:
+#    id: str
+#    assessment: str
+#    mark: float
+#    created_at:  datetime
+#    note: str
 
 #@dataclass
 #class Student:
@@ -76,7 +77,7 @@ class DataProcessing:
                 next(reader)  # Discard the first row
                 for row in reader:
                     #print(row[0])
-                    mark_row = MarkBook(id=row[0],
+                    mark_row = Mark(id=row[0],
                                             assessment=row[1],
                                             mark=float(row[2]),
                                             created_at=row[3],
@@ -122,8 +123,8 @@ class DataProcessing:
                             student.mobile,
                             student.created_at])
     
-    def save_all_students_to_file(self, students: List) -> None:
-        with open('students_data.csv', 'w') as csvfile:
+    def save_all_students_to_file(self, data_file: str, students: List) -> None:
+        with open(data_file, 'w') as csvfile:
             writer = csv.writer(csvfile)
             for student in students:
                 writer.writerow([student.id, 
@@ -151,7 +152,19 @@ class DataProcessing:
                 return self.students.index(student)
 
 
-    def save_mark_to_file(self, student_id, mark: MarkBook) -> None:
+    def mark_match(self, student_id: str) -> bool:
+        for mark in self.marks_book:
+            if mark.id == student_id:
+                return True
+        return False
+    
+    def get_mark(self, student_id: str) -> int:
+        for mark in self.marks_book:
+            if mark.id == student_id:
+                return self.marks.index(mark)
+
+
+    def save_mark_to_file(self, student_id, mark: Mark) -> None:
         """Save mark of a student to the mark book file."""
         with open('marks_book.csv', 'a') as csvfile:
             writer = csv.writer(csvfile)
@@ -161,7 +174,7 @@ class DataProcessing:
                             mark.created_at,
                             mark.note])
 
-    def add_mark_to_student(self, student_id: str, mark: MarkBook) -> None:
+    def add_mark_to_student(self, student_id: str, mark: Mark) -> None:
         """Add a mark to a student in the mark book"""
         if self.student_match(student_id):
             self.marks_book.append(mark)
