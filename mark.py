@@ -19,6 +19,7 @@ class Mark(BaseModel):
     assessment: str 
     mark: float
     created_at: date
+    note: str
 
     @model_validator(mode='before')
     @classmethod

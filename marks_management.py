@@ -102,12 +102,12 @@ class MarksManagement:
         if student_id:
             if self.data_processing.student_match(student_id):
                 assessment = self.get_assessment_choice()
-                mark = float(input("Enter Mark: "))
+                newMark = float(input("Enter Mark: "))
                 created_at = datetime.datetime.today().date()
                 note = input("Enter any note or <ENTER> for nothing: ")
                 if not note:
                     note = 'n/a'
-                mark = MarkBook(student_id, assessment.name, mark, created_at, note)
+                mark = Mark(id=student_id, assessment=assessment.name, mark=newMark, created_at=created_at, note=note)
                 self.data_processing.add_mark_to_student(student_id, mark)
             else:
                 os.system(f"afplay {sounds_path}beep-10.wav")
@@ -121,7 +121,7 @@ class MarksManagement:
     
 
 
-    def edit_student(self):
+    def edit_mark(self):
         student_id = input("Enter student ID: ")
         # check if an id was provided
         if student_id:
