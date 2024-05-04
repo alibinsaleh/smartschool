@@ -46,6 +46,7 @@ class DataProcessing:
 
     def load_students_from_file(self) -> None:
         try:
+            self.students = []
             with open('students_data.csv', 'r') as csvfile:
                 reader = csv.reader(csvfile)
                 next(reader)  # Discard the first row
@@ -58,6 +59,7 @@ class DataProcessing:
                             mobile=row[4],
                             created_at=datetime.datetime.strptime(row[5], "%Y-%m-%d"))
                     self.students.append(student)
+            print(f"Number of students: {len(self.students)}")
         except FileNotFoundError:
             print("File (students_data.csv) not found !")
             choice = input("Do you want me to create it for you? (Y/N): ")
@@ -69,7 +71,82 @@ class DataProcessing:
         except Exception as e:  # Catch other potential exceptions
             print(f"An error occurred: {e}")
     
+
+    def get_students(self, filter=None) -> List:
+        """Retrieve all or some students from the list of students"""
+        if not filter:
+            return self.students
+        temp_students = []
+        for student in self.students:
+            if student.classroom == filter:
+                temp_students.append(student)
+        return temp_students
+
+    
+    def get_student_marks(self, student_id: str) -> List:
+        """Retrieve all student's marks from the marks_book list"""
+        student_marks = []
+        for mark in self.marks_book:
+            if mark.id == student_id:
+                student_marks.append(mark)
+        return student_marks
+
+    def save_student_to_file(self, data_file: str, student: Student) -> None:
+        try:
+            with open(data_file, 'a', newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([student.id, 
+                                student.name, 
+                                student.classroom,
+                                student.address,
+                                student.mobile,
+                                student.created_at])
+        except FileNotFountError:
+            # If the file doesn't exist, create it in write mode and then open it in append mode
+            with open(data_file, 'w', newline="") as csvfile:
+                # Write the header row if necessary 
+                writer = csv.writer(csvfile)
+
+            # Now open the file in append mode
+            with open(data_file, 'a', newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([student.id, 
+                                student.name, 
+                                student.classroom,
+                                student.address,
+                                student.mobile,
+                                student.created_at])
+
+    def save_all_students_to_file(self, data_file: str, students: List) -> None:
+        with open(data_file, 'w', newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            for student in students:
+                writer.writerow([student.id, 
+                                student.name, 
+                                student.classroom,
+                                student.address,
+                                student.mobile,
+                                student.created_at])
+            
+
+    def add_student(self, student: Student) -> None:
+        if student:
+            self.students.append(student)
+            self.save_student_to_file('students_data.csv', student)
+
+    def student_match(self, student_id: str) -> bool:
+        for student in self.students:
+            if student.id == student_id:
+                return True
+        return False
+    
+    def get_student_index(self, student_id: str) -> int:
+        for student in self.students:
+            if student.id == student_id:
+                return self.students.index(student)
+
     def load_marks_book(self) -> None:
+        self.marks_book = []
         try:
             with open('marks_book.csv', 'r') as csvfile:
                 reader = csv.reader(csvfile)
@@ -94,64 +171,6 @@ class DataProcessing:
         except Exception as e: #Catch other potential exceptions
             print(f"An error occured: {e}")
 
-    def get_students(self, filter=None) -> List:
-        """Retrieve all or some students from the list of students"""
-        if not filter:
-            return self.students
-        temp_students = []
-        for student in self.students:
-            if student.classroom == filter:
-                temp_students.append(student)
-        return temp_students
-
-    
-    def get_student_marks(self, student_id: str) -> List:
-        """Retrieve all student's marks from the marks_book list"""
-        student_marks = []
-        for mark in self.marks_book:
-            if mark.id == student_id:
-                student_marks.append(mark)
-        return student_marks
-
-    def save_student_to_file(self, student: Student) -> None:
-        with open('students_data.csv', 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([student.id, 
-                            student.name, 
-                            student.classroom,
-                            student.address,
-                            student.mobile,
-                            student.created_at])
-    
-    def save_all_students_to_file(self, data_file: str, students: List) -> None:
-        with open(data_file, 'w') as csvfile:
-            writer = csv.writer(csvfile)
-            for student in students:
-                writer.writerow([student.id, 
-                                student.name, 
-                                student.classroom,
-                                student.address,
-                                student.mobile,
-                                student.created_at])
-            
-
-    def add_student(self, student: Student) -> None:
-        if student:
-            self.students.append(student)
-            self.save_student_to_file(student)
-
-    def student_match(self, student_id: str) -> bool:
-        for student in self.students:
-            if student.id == student_id:
-                return True
-        return False
-    
-    def get_student(self, student_id: str) -> int:
-        for student in self.students:
-            if student.id == student_id:
-                return self.students.index(student)
-
-
     def mark_match(self, student_id: str) -> bool:
         for mark in self.marks_book:
             if mark.id == student_id:
@@ -164,21 +183,64 @@ class DataProcessing:
                 return self.marks.index(mark)
 
 
-    def save_mark_to_file(self, student_id, mark: Mark) -> None:
-        """Save mark of a student to the mark book file."""
-        with open('marks_book.csv', 'a') as csvfile:
+    def get_student_marks(self, student_id: str) -> List:
+        marks = []
+        for mark in self.marks_book:
+            if mark.id == student_id:
+                marks.append(mark)
+        return marks
+
+    def save_all_marks_to_file(self):
+        """Save all marks from marks_book list to file 'marks_book.csv'"""
+        with open('marks_book.csv', 'w', newline="") as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow([mark.id,
-                            mark.assessment,
-                            mark.mark,
-                            mark.created_at,
-                            mark.note])
+            # write the header row
+            writer.writerow(['id', 'assessment', 'mark', 'created_at', 'note'])
+            for mark in self.marks_book:
+                writer.writerow([mark.id, mark.assessment, mark.mark, mark.created_at, mark.note])
+
+    #def save_mark_to_file(self, student_id, mark: Mark) -> None:
+    #    """Save mark of a student to the mark book file."""
+    #    with open('marks_book.csv', 'a') as csvfile:
+    #        writer = csv.writer(csvfile)
+    #        writer.writerow([mark.id,
+    #                        mark.assessment,
+    #                        mark.mark,
+    #                        mark.created_at,
+    #                        mark.note])
+    
+    def save_mark_to_file(self, data_file: str, mark: Mark) -> None:
+        """Save mark of a student to file."""
+        try:
+            with open(data_file, 'a', newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([mark.id,
+                                mark.assessment,
+                                mark.mark,
+                                mark.created_at,
+                                mark.note])
+        except FileNotFountError:
+            # If the file doesn't exist, create it in write mode and then open it in append mode
+            with open(data_file, 'w', newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                # Write the header row if necessary 
+                writer.writerow(['id', 'assessment', 'mark', 'created_at', 'note'])
+
+            # Now open the file in append mode
+            with open(data_file, 'a', newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([mark.id,
+                                mark.assessment,
+                                mark.mark,
+                                mark.created_at,
+                                mark.note])
+
 
     def add_mark_to_student(self, student_id: str, mark: Mark) -> None:
         """Add a mark to a student in the mark book"""
         if self.student_match(student_id):
             self.marks_book.append(mark)
-            self.save_mark_to_file(student_id, mark)
+            self.save_mark_to_file('marks_book.csv', mark)
         else:
             print("Sorry, student with this ID ({student_id}) is not found !")
 

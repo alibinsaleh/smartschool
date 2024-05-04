@@ -21,7 +21,7 @@ class StudentsManagement:
         self.data_processing.load_students_from_file()
         self.data_processing.load_marks_book()
         self.choices = {
-            "1": self.add_student,
+            "1": self.new_student,
             "2": self.edit_student,
             "3": self.delete_student,
             "4": self.display_all_students,
@@ -39,7 +39,7 @@ class StudentsManagement:
 +  STUDENTS MANAGEMENT MENU  +
 ++++++++++++++++++++++++++++++
 
-1. Add Student
+1. New Student
 2. Edit Student
 3. Delete Student
 4. Display all students
@@ -64,16 +64,16 @@ class StudentsManagement:
                 print("{0} is not a valid choice".format(choice))
                 break
 
-    def add_student(self):
-        id = input('Enter student ID: ')
-        if not self.data_processing.student_match(id):
+    def new_student(self) -> bool:
+        student_id = input('Enter student ID: ')
+        if not self.data_processing.student_match(student_id):
             name = input('Enter student name: ')
             classroom = input('Enter classroom: ')
             address = 'Hofuf'
             mobile = '0549282891'
             created_at = datetime.date.today()
             try:
-                self.data_processing.add_student(Student(id=id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at))
+                self.data_processing.add_student(Student(id=student_id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at))
             except ValueError as e:
                 print(e)
         else:
@@ -134,28 +134,68 @@ class StudentsManagement:
         if student_id:
             student_found = self.data_processing.student_match(student_id)
             # Check the availability of student in the list first.
-            idx = self.data_processing.get_student(student_id)
+            idx = self.data_processing.get_student_index(student_id)
             if student_found:
+                print(f"Student Name: {self.data_processing.students[idx].name}")
                 # Check if this student has marks.
-                print(f"Current Name: {self.data_processing.students[idx].name}")
                 marks_found = self.data_processing.mark_match(student_id)
-                if marks_found:
-                    print(f"Yaaah, {self.data_processing.students[idx].name} has marks!")
+                # Get student's marks 
+                marks = self.data_processing.get_student_marks(student_id)
+                # print(f"{self.data_processing.students[idx].name} has marks!")
+                # display selected student's marks
+                self.display_student_marks(marks)
+                # Ask for student delete confirmation
+                choice = input(f"Are you sure want to delete this student ({self.data_processing.students[idx].name}) ? ")
+                if choice.upper() == 'Y':
+                    # before deleting student, save his data  to deleted_students.csv file
+                    print(self.data_processing.students[idx])
+                    self.data_processing.save_student_to_file('deleted_students.csv', self.data_processing.students[idx])
+                    # now remove the student from self.data_processing.students list
+                    student = self.data_processing.students[idx]
+                    self.data_processing.students.remove(student)
+                    # save students list to file
+                    self.data_processing.save_all_students_to_file('students_data.csv', self.data_processing.students)
+                    if marks_found:
+                        delete_marks_choice = input("Delete student's marks ? ")
+                        if delete_marks_choice.upper() == 'Y':
+                            # go a head and delete student's marks
+                            self.remove_marks(marks)
+
         input("Press < ENTER > to continue ...")
-        # Ask for confirmmation.
-        # If CONFIRMMED:
-        #   If student exists in list:
-        #       Add this student data to deleted_students.csv file.
-        #   If student has marks:
-        #       Add all his marks to deleted_marks.csv file.
-        #   Delete student from students list and from students_data.csv
-        #   Delete student's marks from list and from marks_record.csv
-        #   Display a deletion success message.
-        # Ask to continue ...
         return True
     
-    
-    
+    def remove_marks(self, marks):
+        # remove mark from main marks list (self.data_processing.marks_book)
+        print(f"Number of marks for this student: {len(marks)}")
+        temp_marks = []
+        for mark in marks:
+            print(mark)
+            # add mark data to the temp_marks list
+            temp_marks.append(mark)
+            self.data_processing.marks_book.remove(mark)
+
+        # save marks_book list back to file after removing the selected student's marks.
+        self.data_processing.save_all_marks_to_file()
+        # Save the deleted marks to deleted_marks.csv file
+        for mark in temp_marks:
+            self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
+
+
+    def display_student_marks(self, marks) -> None:
+        """Print all marks in a formatted table using table of rich module"""
+        os.system(f"afplay {sounds_path}button-15.wav")
+        if len(marks) > 0:
+            table = Table(title="Student Marks", show_header=True)
+            table.add_column("ID", style="green", justify="left")
+            table.add_column("Assessment", style="magenta", justify="left")
+            table.add_column("Mark", justify="right")
+            for mark in marks:
+                # populate table with marks  
+                table.add_row(mark.id, mark.assessment, str(mark.mark))
+
+            # print the table after populating it with data
+            print(table)
+
 
     def display_all_students(self):
         """Prints all students in a formatted table."""

@@ -22,7 +22,7 @@ class MarksManagement:
         self.data_processing.load_marks_book()
         self.choices = {
             "1": self.new_mark,
-            "2": self.edit_student,
+            "2": self.edit_mark,
             "3": self.delete_student,
             "4": self.display_all_students,
             "5": self.display_classroom_students,
@@ -40,7 +40,7 @@ class MarksManagement:
 (==========================)
 
 1. Insert New Mark
-2. Edit Student
+2. Edit Mark
 3. Delete Student
 4. Display all students
 5. Display classroom students
