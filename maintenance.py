@@ -167,7 +167,18 @@ class Maintenance:
 
     def display_backup_history(self):
         """Prints all students in a formatted table."""
-        print("DISPLAY BACKUP HISTORY")
+        table = Table(title="BACKUP HISTORY", show_header=True)
+        table.add_column("Date Created", style="green", justify="left")
+        table.add_column("Backup Number", style="magenta", justify="left")
+        with open(backups_path+'backups_history.csv', 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader)
+            for line in reader:
+                # populate table with backup history data  
+                table.add_row(line[0], str(line[1]))
+
+        # print the table after populating it with data
+        print(table)
         input("Press <ENTER> to continue...")
         return True
 
