@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Author: Ali A. Almohammed Saleh
 Program: dataframe_processing.py
@@ -50,21 +51,26 @@ class StudentDF(DF):
     def get_students_totals_df(self):
         totals_df = pd.DataFrame(columns=['id', 'name', 'classroom', 'total'])
         for index, row in self.df.iterrows():
-            # find student in the marks data frame
+            # Check if the current student has marks in the marks dataframe
             student_id_in_marks = self.marks_df[self.marks_df['id'] == row[0]]
-            if (not student_id_in_marks.empty):
+            if (not student_id_in_marks.empty): 
+                # Student is indeed has marks in marks dataframe, so, group marks dataframe by this student's id and sum the total of those lines.
                 total = self.marks_df.groupby('id')['mark'].sum()
+                # Create a dictionary representing a line in the temp_df which consists of students' id, name, classroom and total.
                 totals_dict = {
                         'id': row[0], 
                         'name': row[1], 
                         'classroom': row[2],
                         'total': total[row[0]]
                 }
+                # Create a temporary dataframe to hold this dictionary.
                 temp_df = pd.DataFrame(totals_dict, index=[0])
+                # now concatenate the temporary dataframe with a dataframe named totals_df which holds all the students' data and totals.
                 totals_df  = pd.concat([totals_df, temp_df], ignore_index=True)
         #print(self.students_totals)
         #for key, value in self.students_totals.items():
         #    print(key, value)
+        # return the totals_df
         return totals_df
 
     def get_totals(self):
@@ -86,7 +92,7 @@ class StudentDF(DF):
 
 def main():
     students = StudentDF('students_data.csv')
-    marks = DF('record_book.csv')
+    marks = DF('marks_book.csv')
     print(students.get_totals())
     #students_category_count = students.count_by_filter('classroom')
     #print(students_category_count)
