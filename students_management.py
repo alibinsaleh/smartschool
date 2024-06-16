@@ -134,8 +134,9 @@ class StudentsManagement:
         if student_id:
             student_found = self.data_processing.student_match(student_id)
             # Check the availability of student in the list first.
-            idx = self.data_processing.get_student_index(student_id)
             if student_found:
+                # if found, get the index number of this student in the students list.
+                idx = self.data_processing.get_student_index(student_id)
                 print(f"Student Name: {self.data_processing.students[idx].name}")
                 # Check if this student has marks.
                 marks_found = self.data_processing.mark_match(student_id)
