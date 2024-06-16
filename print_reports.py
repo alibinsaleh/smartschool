@@ -70,7 +70,6 @@ class Report:
 
 def txt_to_pdf(txt_file, pdf_file):
     pdf = PDF(orientation='L', unit='mm', format='A4')  # Landscape mode
-    #pdf = PDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     

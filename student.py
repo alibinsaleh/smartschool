@@ -19,9 +19,9 @@ class Student(BaseModel):
     id: str
     name: str 
     classroom: str
-    address: Optional[str]
-    mobile: Optional[str]
-    created_at: date
+    address: Optional[str] = None
+    mobile: Optional[str] =  None
+    created_at: Optional[date] = date.today()
 
     @model_validator(mode='before')
     @classmethod
