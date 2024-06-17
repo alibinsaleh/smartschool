@@ -268,12 +268,12 @@ Created At: {student.created_at}
         print("======================= REPORT DETAILS ====================")
         print()
 
-        print(f"{'Assessment':<25} {'Mark':>5} {'Created At':>20} {'Note'}")
+        print(f"{'ASSESSMENT TYPE':<30} {'MARK':<10} {'CREATED AT':<20} {'Note'}")
         print("-" * (25 + 5 + 20 + len("Note") + 6))  # Calculate total separator length
 
         for mark in self.data_processing.marks_book:
             if mark.id == student_id:
-                print(f"{mark.assessment:<25} {mark.mark:>5} {mark.created_at:>20} {mark.note}")
+                print(f"{mark.assessment:<30} {mark.mark:<10} {str(mark.created_at):<20} {mark.note}")
 
         print()
         print("======================= END OF REPORT ====================")
