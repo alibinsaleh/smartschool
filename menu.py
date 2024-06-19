@@ -129,7 +129,9 @@ class Menu:
         print("Thank you for using the FOLLOW-UP APPLICATION.")
         sys.exit(0)
 
+def main():
+    Menu().run()
 
 if __name__ == "__main__":
-    Menu().run()
+    main()
 

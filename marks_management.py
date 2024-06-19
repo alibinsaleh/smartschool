@@ -78,7 +78,7 @@ class MarksManagement:
         4- PRACTICAL QUIZ
         5- PROJECTS
         6- VIOLATION """)
-        choice = input(":")
+        choice = input("--->:")
         # check if a correct choice was provided.
         if choice:
             # convert choice to int
@@ -117,7 +117,7 @@ class MarksManagement:
             os.system(f"afplay {sounds_path}button-14.wav")
             print("No ID was provided.")
         input("Press <ENTER> to continue ...")
-
+        return True
     
 
 

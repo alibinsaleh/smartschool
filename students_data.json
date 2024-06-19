@@ -1,20 +1,6 @@
 {
     "students": [
         {
-            "id": "92630",
-            "name": "Isabella Miller",
-            "address": "782 Pine Rd",
-            "mobile": "+1 356-448-1284",
-            "classroom": "201"
-        },
-        {
-            "id": "33743",
-            "name": "Abigail Hernandez",
-            "address": "201 Pine St",
-            "mobile": "+1 676-479-2037",
-            "classroom": "201"
-        },
-        {
             "id": "16326",
             "name": "Sophia Garcia",
             "address": "156 Birch Pl",
@@ -631,13 +617,6 @@
             "classroom": "102"
         },
         {
-            "id": "1002",
-            "name": "Sami",
-            "address": "Hofuf",
-            "mobile": "0549282891",
-            "classroom": "102"
-        },
-        {
             "id": "10003",
             "name": "Faris",
             "address": "Hofuf",
@@ -807,10 +786,10 @@
         },
         {
             "id": "1018913358",
-            "name": "Ali Abdullah Almohammed Saleh",
+            "name": "Ali A. Almohammed Saleh",
             "address": "Hofuf",
             "mobile": "0549282891",
-            "classroom": "205"
+            "classroom": "201"
         },
         {
             "id": "10001",
@@ -825,6 +804,34 @@
             "address": "Hofuf",
             "mobile": "0549282891",
             "classroom": "103"
+        },
+        {
+            "id": "1018913317",
+            "name": "Abdullah Ali Almohammed Saleh",
+            "address": "Hofuf",
+            "mobile": "0549282891",
+            "classroom": "103"
+        },
+        {
+            "id": "909090",
+            "name": "Gigi Hadid",
+            "address": "Hofuf",
+            "mobile": "0549282891",
+            "classroom": "102"
+        },
+        {
+            "id": "54546",
+            "name": "Abbass Fadhil Alqattan",
+            "address": "Hofuf",
+            "mobile": "0549282891",
+            "classroom": "103"
+        },
+        {
+            "id": "1119911100",
+            "name": "Andrew Aziz",
+            "address": "Hofuf",
+            "mobile": "0549282891",
+            "classroom": "105"
         }
     ]
 }
