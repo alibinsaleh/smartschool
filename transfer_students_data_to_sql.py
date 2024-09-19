@@ -41,6 +41,7 @@ class DB:
             """
             self.cursor.execute(sql, (student[0], student[1], student[2], 
                 student[3], student[4], student[5]))
+            self.connection.commit()
 
     def select_records(self) -> None:
         sql = "SELECT * FROM students"

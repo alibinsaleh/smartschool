@@ -110,7 +110,7 @@ class Maintenance:
 
         try:
             shutil.copyfile(source_file, destination_file)
-            print(f"File {source_file} backed up successfull.")
+            print(f"File {source_file} backed up successfully.")
         except IOError as e:
             print(f"Error backing up file: {e}")
 
