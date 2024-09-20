@@ -23,7 +23,7 @@ class MarksManagement:
         self.choices = {
             "1": self.new_mark,
             "2": self.edit_mark,
-            "3": self.delete_student,
+            "3": self.delete_marks,
             "4": self.display_all_students,
             "5": self.display_classroom_students,
             "6": self.display_student_report,
@@ -36,16 +36,16 @@ class MarksManagement:
         os.system(f"afplay {sounds_path}beep.wav")
         print("""
 (==========================)
-|  MARKSS MANAGEMENT MENU  |
+|  MARKS MANAGEMENT MENU  |
 (==========================)
 
 1. Insert New Mark
 2. Edit Mark
-3. Delete Student
+3. Delete Marks
 4. Display all students
 5. Display classroom students
 6. Display student report
-7. Draw Students's totals pie chart
+7. Draw Students' totals pie chart
 8. Serialize Students Data
 9. <- Back
 	""")
@@ -65,16 +65,16 @@ class MarksManagement:
                 break
     
     def get_assessment_choice(self) -> str:
-        assess_list = [Assessment.THEORITICAL_PARTICIPATION,
+        assess_list = [Assessment.THEORETICAL_PARTICIPATION,
             Assessment.PRACTICAL_PARTICIPATION,
-            Assessment.THEORITICAL_QUIZ,
+            Assessment.THEORETICAL_QUIZ,
             Assessment.PRACTICAL_QUIZ, 
             Assessment.PROJECTS,
             Assessment.VIOLATION]
         print("""Select an assessment category:
-        1- THEORITICAL PARTICIPATION
+        1- THEORETICAL PARTICIPATION
         2- PRACTICAL PARTICIPATION
-        3- THEORITICAL QUIZ
+        3- THEORETICAL QUIZ
         4- PRACTICAL QUIZ
         5- PROJECTS
         6- VIOLATION """)
@@ -120,6 +120,20 @@ class MarksManagement:
         return True
     
 
+    def display_student_marks(self, marks) -> None:
+        """Print all marks in a formatted table using table of rich module"""
+        os.system(f"afplay {sounds_path}button-15.wav")
+        if len(marks) > 0:
+            table = Table(title="Student Marks", show_header=True)
+            table.add_column("ID", style="green", justify="left")
+            table.add_column("Assessment", style="magenta", justify="left")
+            table.add_column("Mark", justify="right")
+            for mark in marks:
+                # populate table with marks
+                table.add_row(mark.id, mark.assessment, str(mark.mark))
+
+            # print the table after populating it with data
+            print(table)
 
     def edit_mark(self):
         student_id = input("Enter student ID: ")
@@ -165,6 +179,36 @@ class MarksManagement:
         
         input("Press < ENTER > to continue ...")
         return True
+
+    def delete_marks(self):
+        # Get Marks from data_processing module
+        student_id = input('Enter Student ID: ')
+        if student_id:
+            marks = self.data_processing.get_student_marks(student_id)
+            student = self.data_processing.get_student(student_id)
+            # remove mark from main marks list (self.data_processing.marks_book)
+            print(f"Number of marks for this student: {len(marks)}")
+            if marks:
+                self.display_student_marks(marks)
+                confirm = input('Are You Sure you want to delete those marks? (Y/N): ')
+                if confirm.upper() == 'Y':
+                    temp_marks = []
+                    for mark in marks:
+                        # add mark data to the temp_marks list
+                        temp_marks.append(mark)
+                        # remove current mark from marks book
+                        self.data_processing.marks_book.remove(mark)
+
+                    # save marks_book list back to file after removing the selected student's marks.
+                    self.data_processing.save_all_marks_to_file()
+                    # Save the deleted marks to deleted_marks.csv file
+                    for mark in temp_marks:
+                        self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
+                    print(f'Student: {student.name} marks have been deleted successfully.')
+
+        input("Press <ENTER> to continue ...")
+        return True
+
 
     def delete_student(self):
         pass
@@ -243,12 +287,12 @@ Created At: {student.created_at}
         print("======================= REPORT DETAILS ====================")
         print()
 
-        print(f"{'Assessment':<25} {'Mark':>5} {'Created At':>20} {'Note'}")
+        print(f"{'Assessment':<25} {'Mark':>5} {'Created At':>10} {'Note'}")
         print("-" * (25 + 5 + 20 + len("Note") + 6))  # Calculate total separator length
 
         for mark in self.data_processing.marks_book:
             if mark.id == student_id:
-                print(f"{mark.assessment:<25} {mark.mark:>5} {mark.created_at:>20} {mark.note}")
+                print(f"{mark.assessment:<25} {mark.mark:>5} {str(mark.created_at):>10} {mark.note}")
 
         print()
         print("======================= END OF REPORT ====================")

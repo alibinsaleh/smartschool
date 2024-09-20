@@ -10,6 +10,7 @@ from rich.table import Table
 from rich import print
 from student import Student
 from data_processing import DataProcessing
+from marks_management import MarksManagement
 from dataframe_processing import StudentDF
 
 sounds_path = './sounds/'
@@ -144,7 +145,9 @@ class StudentsManagement:
                 marks = self.data_processing.get_student_marks(student_id)
                 # print(f"{self.data_processing.students[idx].name} has marks!")
                 # display selected student's marks
-                self.display_student_marks(marks)
+                # self.display_student_marks(marks)
+                MarksManagement(self.data_processing).display_student_marks(marks)
+
                 # Ask for student delete confirmation
                 choice = input(f"Are you sure want to delete this student ({self.data_processing.students[idx].name}) ? ")
                 if choice.upper() == 'Y':
@@ -182,20 +185,7 @@ class StudentsManagement:
             self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
 
 
-    def display_student_marks(self, marks) -> None:
-        """Print all marks in a formatted table using table of rich module"""
-        os.system(f"afplay {sounds_path}button-15.wav")
-        if len(marks) > 0:
-            table = Table(title="Student Marks", show_header=True)
-            table.add_column("ID", style="green", justify="left")
-            table.add_column("Assessment", style="magenta", justify="left")
-            table.add_column("Mark", justify="right")
-            for mark in marks:
-                # populate table with marks  
-                table.add_row(mark.id, mark.assessment, str(mark.mark))
 
-            # print the table after populating it with data
-            print(table)
 
 
     def display_all_students(self):
@@ -326,6 +316,7 @@ Created At: {student.created_at}
         print(json.dumps(data, indent=4))
         input("Press <ENTER> to continue ...")
         return True
-    
+
+
     def back(self):
         return False

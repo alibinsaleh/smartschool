@@ -2,19 +2,28 @@
  
 
 ==================== REPORT HEADER =======================
-ID: 1018913358
-Name: Ali A. Almohammed Saleh
-Classroom: 201
+ID: 10001
+Name: Momo in the nono
+Classroom: 101
 Address: Hofuf
 Mobile: 0549282891
-Created At: 2024-05-14
+Created At: 2024-05-03
 	    
  
 =================== REPORT DETAILS =======================
  
 ASSESSMENT TYPE                MARK       CREATED AT           NOTE                                                                                                
  
-THEORITICAL_PARTICIPATION      0.25       2024-04-12           I must improve (New Mark).                                                                          
+Assessment.PROJECTS            2.0        2024-03-16           N/A                                                                                                 
+VIOLATION                      1.0        2024-04-26           n/a                                                                                                 
+PRACTICAL_QUIZ                 2.5        2024-04-27           n/a                                                                                                 
+THEORETICAL_PARTICIPATION      0.25       2024-05-03           Testing                                                                                             
+PROJECTS                       5.0        2024-05-03           Excellent project                                                                                   
+VIOLATION                      3.0        2024-06-18           testing                                                                                             
+VIOLATION                      1.5        2024-06-18           n/a                                                                                                 
+THEORETICAL_PARTICIPATION      2.0        2024-06-18           n/a                                                                                                 
+VIOLATION                      -0.5       2024-09-07           n/a                                                                                                 
+THEORETICAL_PARTICIPATION      0.25       2024-09-20           n/a                                                                                                 
  
 ************************** End of Student Grades  Report *******************
  

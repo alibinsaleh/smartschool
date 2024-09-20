@@ -95,16 +95,16 @@ class Menu:
 #
 #    
 #    def get_assessment_choice(self) -> str:
-#        assess_list = [Assessment.THEORITICAL_PARTICIPATION,
+#        assess_list = [Assessment.THEORETICAL_PARTICIPATION,
 #            Assessment.PRACTICAL_PARTICIPATION,
-#            Assessment.THEORITICAL_QUIZ,
+#            Assessment.THEORETICAL_QUIZ,
 #            Assessment.PRACTICAL_QUIZ, 
 #            Assessment.PROJECTS,
 #            Assessment.VIOLATION]
 #        print("""Select an assessment category:
-#        1- THEORITICAL PARTICIPATION
+#        1- THEORETICAL PARTICIPATION
 #        2- PRACTICAL PARTICIPATION
-#        3- THEORITICAL QUIZ
+#        3- THEORETICAL QUIZ
 #        4- PRACTICAL QUIZ
 #        5- PROJECTS
 #        6- VIOLATION """)

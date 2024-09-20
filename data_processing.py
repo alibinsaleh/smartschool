@@ -11,9 +11,9 @@ import csv
 
 
 class Assessment(Enum):
-    THEORITICAL_PARTICIPATION = auto()
+    THEORETICAL_PARTICIPATION = auto()
     PRACTICAL_PARTICIPATION = auto()
-    THEORITICAL_QUIZ = auto()
+    THEORETICAL_QUIZ = auto()
     PRACTICAL_QUIZ = auto()
     PROJECTS = auto()
     VIOLATION = auto()
@@ -71,6 +71,13 @@ class DataProcessing:
         except Exception as e:  # Catch other potential exceptions
             print(f"An error occurred: {e}")
     
+
+    def get_student(self, student_id) -> Student:
+        students = self.students
+        for student in students:
+            if student.id == student_id:
+                return student
+
 
     def get_students(self, filter=None) -> List:
         """Retrieve all or some students from the list of students"""
@@ -183,12 +190,12 @@ class DataProcessing:
                 return self.marks.index(mark)
 
 
-    def get_student_marks(self, student_id: str) -> List:
-        marks = []
-        for mark in self.marks_book:
-            if mark.id == student_id:
-                marks.append(mark)
-        return marks
+    # def get_student_marks(self, student_id: str) -> List:
+    #     marks = []
+    #     for mark in self.marks_book:
+    #         if mark.id == student_id:
+    #             marks.append(mark)
+    #     return marks
 
     def save_all_marks_to_file(self):
         """Save all marks from marks_book list to file 'marks_book.csv'"""
@@ -253,9 +260,9 @@ def get_assessment_choice() -> str:
       Assessment.PROJECTS,
       Assessment.VIOLATION]
     print("""Select an assessment category:
-            1- THEORITICAL PARTICIPATION
+            1- THEORETICAL PARTICIPATION
             2- PRACTICAL PARTICIPATION
-            3- THEORITICAL QUIZ
+            3- THEORETICAL QUIZ
             4- PRACTICAL QUIZ
             5- PROJECTS
             6- VIOLATION """)
