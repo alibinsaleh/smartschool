@@ -9,6 +9,7 @@ import json
 from rich.table import Table
 from rich import print
 from mark import Mark
+from typing import List
 from data_processing import DataProcessing
 from data_processing import DataProcessing, Assessment
 
@@ -120,20 +121,28 @@ class MarksManagement:
         return True
     
 
-    def display_student_marks(self, marks) -> None:
+    def display_student_marks(self, marks) -> List:
         """Print all marks in a formatted table using table of rich module"""
         os.system(f"afplay {sounds_path}button-15.wav")
         if len(marks) > 0:
             table = Table(title="Student Marks", show_header=True)
             table.add_column("ID", style="green", justify="left")
+            table.add_column("Mark Number", style="cyan", justify="left")
             table.add_column("Assessment", style="magenta", justify="left")
             table.add_column("Mark", justify="right")
+            count = 1
+            marks_list = []
             for mark in marks:
                 # populate table with marks
-                table.add_row(mark.id, mark.assessment, str(mark.mark))
+                table.add_row(mark.id, str(count), mark.assessment, str(mark.mark))
+                # append mark to marks_list
+                marks_list.append(mark)
+                # increment count by 1
+                count += 1
 
             # print the table after populating it with data
             print(table)
+            return marks_list
 
     def edit_mark(self):
         student_id = input("Enter student ID: ")
@@ -180,7 +189,7 @@ class MarksManagement:
         input("Press < ENTER > to continue ...")
         return True
 
-    def delete_marks(self):
+    def delete_marks(self) -> None:
         # Get Marks from data_processing module
         student_id = input('Enter Student ID: ')
         if student_id:
@@ -188,26 +197,72 @@ class MarksManagement:
             student = self.data_processing.get_student(student_id)
             # remove mark from main marks list (self.data_processing.marks_book)
             print(f"Number of marks for this student: {len(marks)}")
+            changed = False
             if marks:
-                self.display_student_marks(marks)
-                confirm = input('Are You Sure you want to delete those marks? (Y/N): ')
-                if confirm.upper() == 'Y':
-                    temp_marks = []
-                    for mark in marks:
-                        # add mark data to the temp_marks list
-                        temp_marks.append(mark)
+                marks_list = self.display_student_marks(marks)
+                print("1- Delete one mark.     2- Delete all marks.     3- Back.")
+                choice = input("Enter 1 , 2 or 3: ")
+                if choice == '1':
+                    mark_number = int(input("Enter mark number: "))
+                    print(marks_list[mark_number-1])
+                    confirm = input('Are You Sure you want to delete this mark? (Y/N): ')
+                    if confirm.upper() == 'Y':
+                        # add this mark to deleted marks file.
+                        self.data_processing.save_mark_to_file('deleted_marks.csv', marks_list[mark_number-1])
                         # remove current mark from marks book
-                        self.data_processing.marks_book.remove(mark)
+                        self.data_processing.marks_book.remove(marks_list[mark_number-1])
+                        changed = True
+                elif choice == '2':
+                    confirm = input('Are You Sure you want to delete those marks? (Y/N): ')
+                    if confirm.upper() == 'Y':
+                        temp_marks = []
+                        for mark in marks:
+                            # add mark data to the temp_marks list
+                            temp_marks.append(mark)
+                            # remove current mark from marks book
+                            self.data_processing.marks_book.remove(mark)
+                            changed = True
+                        # Save the deleted marks to deleted_marks.csv file
+                        for mark in temp_marks:
+                            self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
+                        print(f'Student: {student.name} marks have been deleted successfully.')
+                else:
+                    self.back()
 
-                    # save marks_book list back to file after removing the selected student's marks.
+                if changed:
+                    # save marks_book list back to file after removing the selected student's marks or a mark.
                     self.data_processing.save_all_marks_to_file()
-                    # Save the deleted marks to deleted_marks.csv file
-                    for mark in temp_marks:
-                        self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
-                    print(f'Student: {student.name} marks have been deleted successfully.')
 
         input("Press <ENTER> to continue ...")
         return True
+    # def delete_marks(self):
+    #     # Get Marks from data_processing module
+    #     student_id = input('Enter Student ID: ')
+    #     if student_id:
+    #         marks = self.data_processing.get_student_marks(student_id)
+    #         student = self.data_processing.get_student(student_id)
+    #         # remove mark from main marks list (self.data_processing.marks_book)
+    #         print(f"Number of marks for this student: {len(marks)}")
+    #         if marks:
+    #             self.display_student_marks(marks)
+    #             confirm = input('Are You Sure you want to delete those marks? (Y/N): ')
+    #             if confirm.upper() == 'Y':
+    #                 temp_marks = []
+    #                 for mark in marks:
+    #                     # add mark data to the temp_marks list
+    #                     temp_marks.append(mark)
+    #                     # remove current mark from marks book
+    #                     self.data_processing.marks_book.remove(mark)
+    #
+    #                 # save marks_book list back to file after removing the selected student's marks.
+    #                 self.data_processing.save_all_marks_to_file()
+    #                 # Save the deleted marks to deleted_marks.csv file
+    #                 for mark in temp_marks:
+    #                     self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
+    #                 print(f'Student: {student.name} marks have been deleted successfully.')
+    #
+    #     input("Press <ENTER> to continue ...")
+    #     return True
 
 
     def delete_student(self):
