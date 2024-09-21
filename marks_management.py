@@ -88,7 +88,7 @@ class MarksManagement:
                 return assess_list[choice-1]
         else:
             os.system(f"afplay {sounds_path}button-14.wav")
-            print("No ID was provided.")
+            print("No Assessment Selected.")
         return ''
     
     def new_mark(self):
@@ -145,51 +145,121 @@ class MarksManagement:
             return marks_list
 
     def edit_mark(self):
-        student_id = input("Enter student ID: ")
-        # check if an id was provided
+        """Edits a mark of a given student."""
+        # Get student's ID.
+        student_id = input('Enter Student ID: ')
         if student_id:
-            found = False
-            changed = False
-            for student in self.data_processing.students:
-                if student.id == student_id:
-                    found = True
-                    idx = self.data_processing.students.index(student)
-                    print(f"Current Name: {student.name}")
-                    new_name = input('Enter new student name or < ENTER > to keep it: ')
-                    if new_name:
-                        name = new_name
-                        changed = True
-                    else:
-                        name = student.name
-                    print(f"Current Classroom: {student.classroom}")
-                    new_classroom = input('Enter new classroom or < ENTER > to keep it: ')
-                    if new_classroom:
-                        classroom = new_classroom
-                        changed = True
-                    else:
-                        classroom = student.classroom
-                    address = 'Hofuf'
-                    mobile = '0549282891'
-                    created_at = datetime.date.today()
-                    if changed:
-                        try:
-                            self.data_processing.students[idx] = Student(id=student_id, name=name, classroom=classroom, address=address, mobile=mobile, created_at=created_at)
-                            self.data_processing.save_all_students_to_file(self.data_processing.students)
-                            print(f"Student with this ID < {student_id} > is successfully updated.")
-                            break
-                        except ValueError as e:
-                            print(e)
-                    else:
-                        print(f"Sorry, no changes on student's data.")
-            if not found:
-                print(f"Sorry, student with this ID < {student_id} > is not found!")
+            if self.data_processing.student_match(student_id):
+                # Get Marks from data_processing module
+                marks = self.data_processing.get_student_marks(student_id)
+                # Get student's data from data_processing module
+                student = self.data_processing.get_student(student_id)
+                # remove mark from main marks list (self.data_processing.marks_book)
+                print(f"Number of marks for this student: {len(marks)}")
+                changed = False
+                # Check if there are marks for this student id
+                if marks:
+                    # Display marks
+                    marks_list = self.display_student_marks(marks)
+                    try:
+                        choice = int(input("Select the mark you want to edit: "))
+                        if (choice > 0) and (choice <= len(marks_list)):
+                            print(f"Student ID: {marks_list[choice-1].id}")
+                            print(f"Mark Number: {choice}")
+                            print(f"Assessment: {marks_list[choice - 1].assessment}")
+                            print(f"Mark: {marks_list[choice - 1].mark}")
+                            print(f"Created At: {marks_list[choice - 1].created_at}")
+                            print(f"Note: {marks_list[choice - 1].note}")
+                            print("--------------------------------------------\n")
+                            assessment = self.get_assessment_choice()
+                            if assessment:
+                                marks_list[choice - 1].assessment = assessment
+                                changed = True
+                            # Get and modify the mark (allowing an empty entry)
+                            newMark = input("Enter new Mark (or press <ENTER> to skip): ")
+                            if newMark:  # Check if the user entered something
+                                try:
+                                    newMark = float(newMark)
+                                    marks_list[choice - 1].mark = newMark
+                                    changed = True
+                                except ValueError:
+                                    print("Invalid mark. It must be a number.")
+                            created_at = datetime.datetime.today().date()
+                            marks_list[choice - 1].created_at = created_at
+                            note = input("Enter any note or <ENTER> for nothing: ")
+                            if note:
+                                marks_list[choice - 1].note = note
+                                changed = True
+                            # mark = Mark(id=student_id, assessment=assessment.name, mark=newMark, created_at=created_at,
+                            #                 note=note)
+                            # self.data_processing.add_mark_to_student(student_id, mark)
+                            if changed:
+                                print(f"Student ID: {marks_list[choice - 1].id}")
+                                print(f"Mark Number: {choice}")
+                                print(f"Assessment: {marks_list[choice - 1].assessment}")
+                                print(f"Mark: {marks_list[choice - 1].mark}")
+                                print(f"Created At: {marks_list[choice - 1].created_at}")
+                                print(f"Note: {marks_list[choice - 1].note}")
+                                self.data_processing.marks_book.remove(marks_list[choice - 1])
+                                self.data_processing.marks_book.append(marks_list[choice - 1])
+                                self.data_processing.save_all_marks_to_file()
+                            else:
+                                print("No Changes have been made.")
+                                print(f"Student ID: {marks_list[choice - 1].id}")
+                                print(f"Mark Number: {choice}")
+                                print(f"Assessment: {marks_list[choice - 1].assessment}")
+                                print(f"Mark: {marks_list[choice - 1].mark}")
+                                print(f"Created At: {marks_list[choice - 1].created_at}")
+                                print(f"Note: {marks_list[choice - 1].note}")
+                        else:
+                            print(f"Number should be (1 to {len(marks_list)})")
+                    except ValueError:
+                        print("Invalid selection.")
+            else:
+                os.system(f"afplay {sounds_path}beep-10.wav")
+                print(f"Sorry, a student with ({student_id}) is not registered.")
         else:
-            print("Sorry, no student ID is provided!")
-        
-        input("Press < ENTER > to continue ...")
+            os.system(f"afplay {sounds_path}button-14.wav")
+            print("No ID was provided.")
+
+
+
+                # if choice == '1':
+                #     mark_number = int(input("Enter mark number: "))
+                #     print(marks_list[mark_number - 1])
+                #     confirm = input('Are You Sure you want to delete this mark? (Y/N): ')
+                #     if confirm.upper() == 'Y':
+                #         # add this mark to deleted marks file.
+                #         self.data_processing.save_mark_to_file('deleted_marks.csv', marks_list[mark_number - 1])
+                #         # remove current mark from marks book
+                #         self.data_processing.marks_book.remove(marks_list[mark_number - 1])
+                #         changed = True
+                # elif choice == '2':
+                #     confirm = input('Are You Sure you want to delete those marks? (Y/N): ')
+                #     if confirm.upper() == 'Y':
+                #         temp_marks = []
+                #         for mark in marks:
+                #             # add mark data to the temp_marks list
+                #             temp_marks.append(mark)
+                #             # remove current mark from marks book
+                #             self.data_processing.marks_book.remove(mark)
+                #             changed = True
+                #         # Save the deleted marks to deleted_marks.csv file
+                #         for mark in temp_marks:
+                #             self.data_processing.save_mark_to_file('deleted_marks.csv', mark)
+                #         print(f'Student: {student.name} marks have been deleted successfully.')
+                # else:
+                #     self.back()
+                #
+                # if changed:
+                #     # save marks_book list back to file after removing the selected student's marks or a mark.
+                #     self.data_processing.save_all_marks_to_file()
+        input("Press <ENTER> to continue ...")
         return True
 
     def delete_marks(self) -> None:
+        """Deletes a mark or multiple marks of a given student by selecting an option
+        displayed to user"""
         # Get Marks from data_processing module
         student_id = input('Enter Student ID: ')
         if student_id:
