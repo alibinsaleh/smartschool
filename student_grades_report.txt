@@ -14,16 +14,14 @@ Created At: 2024-05-03
  
 ASSESSMENT TYPE                MARK       CREATED AT           NOTE                                                                                                
  
-Assessment.PROJECTS            2.0        2024-03-16           N/A                                                                                                 
 VIOLATION                      1.0        2024-04-26           n/a                                                                                                 
-PRACTICAL_QUIZ                 2.5        2024-04-27           n/a                                                                                                 
 THEORETICAL_PARTICIPATION      0.25       2024-05-03           Testing                                                                                             
-PROJECTS                       5.0        2024-05-03           Excellent project                                                                                   
-VIOLATION                      3.0        2024-06-18           testing                                                                                             
 VIOLATION                      1.5        2024-06-18           n/a                                                                                                 
-THEORETICAL_PARTICIPATION      2.0        2024-06-18           n/a                                                                                                 
 VIOLATION                      -0.5       2024-09-07           n/a                                                                                                 
 THEORETICAL_PARTICIPATION      0.25       2024-09-20           n/a                                                                                                 
+PRACTICAL_QUIZ                 2.5        2024-04-27           n/a                                                                                                 
+THEORETICAL_PARTICIPATION      2.0        2024-06-18           n/a                                                                                                 
+Assessment.PROJECTS            1.0        2024-09-21           testing Edit Mark                                                                                   
  
 ************************** End of Student Grades  Report *******************
  

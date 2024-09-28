@@ -148,5 +148,9 @@ def main():
     pdf_file = 'student_grades_report.pdf'   # Path where you want to save the PDF
     txt_to_pdf(txt_file, pdf_file)
 
+    txt_file = 'normal_text_file.txt'
+    pdf_file = 'normal_text_file.pdf'
+    txt_to_pdf(txt_file, pdf_file)
+
 if __name__ == '__main__':
     main()

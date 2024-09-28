@@ -28,6 +28,7 @@ class App:
         self.pdf_listbox.pack()
         self.pdf_listbox.insert(tk.END, 'students_list_report')
         self.pdf_listbox.insert(tk.END, 'student_grades_report')
+        self.pdf_listbox.insert(tk.END, 'normal_text_file')
     
     def open_second_window(self):
         second_window = tk.Toplevel(self.main_window)
