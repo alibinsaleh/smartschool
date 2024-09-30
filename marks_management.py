@@ -102,18 +102,28 @@ class MarksManagement:
         # check if an id was provided
         if student_id:
             if self.data_processing.student_match(student_id):
+                student = self.data_processing.get_student(student_id)
+                marks = self.data_processing.get_student_marks(student_id)
+                print(f"Student Name: {student.name}")
+                self.display_student_marks(marks)
                 assessment = self.get_assessment_choice()
-                newMark = float(input("Enter Mark: "))
-                created_at = datetime.datetime.today().date()
-                note = input("Enter any note or <ENTER> for nothing: ")
-                if not note:
-                    note = 'n/a'
-                mark = Mark(id=student_id, assessment=assessment.name, mark=newMark, created_at=created_at, note=note)
-                self.data_processing.add_mark_to_student(student_id, mark)
+                if assessment:
+                    try:
+                        newMark = float(input("Enter Mark: "))
+                        if newMark:
+                            created_at = datetime.datetime.today().date()
+                            note = input("Enter any note or <ENTER> for nothing: ")
+                            if not note:
+                                note = 'n/a'
+                            mark = Mark(id=student_id, assessment=assessment.name, mark=newMark, created_at=created_at, note=note)
+                            self.data_processing.add_mark_to_student(student_id, mark)
+                        else:
+                            print("No Mark entered, quitting ...")
+                    except ValueError:
+                        print("Only floats and integers values allowed.")
             else:
                 os.system(f"afplay {sounds_path}beep-10.wav")
                 print(f"Sorry, a student with ({student_id}) is not registered.")
-    
         else:
             os.system(f"afplay {sounds_path}button-14.wav")
             print("No ID was provided.")
@@ -130,11 +140,12 @@ class MarksManagement:
             table.add_column("Mark Number", style="cyan", justify="left")
             table.add_column("Assessment", style="magenta", justify="left")
             table.add_column("Mark", justify="right")
+            table.add_column("Created At", justify="right")
             count = 1
             marks_list = []
             for mark in marks:
                 # populate table with marks
-                table.add_row(mark.id, str(count), mark.assessment, str(mark.mark))
+                table.add_row(mark.id, str(count), mark.assessment, str(mark.mark), str(mark.created_at))
                 # append mark to marks_list
                 marks_list.append(mark)
                 # increment count by 1
